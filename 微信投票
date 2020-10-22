@@ -1,0 +1,58 @@
+ //执行脚本
+	function init(){
+    	 initIp();
+    }
+	//定时操作，每秒执行一次
+    function demo(){ 
+    }setInterval("init()",1000);
+	//随机生成以ovgMdt开头的27位微信openid（字母大小写+数字）
+	function createNum(){
+    	var str = "ovgMdt",
+    	        range = 21,
+    	        arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+    	 	// 随机产生
+    	    for(var i=0; i<range; i++){
+    	        pos = Math.round(Math.random() * (arr.length-1));
+    	        str += arr[pos];
+    	    }
+    	    return str;
+    	
+    }
+	//提交请求
+    function initIp(){
+    	var ip=createIp();
+		var num=createNum();
+		var $toopenid='ovgMdtSysi89sfInf0pdfg5T';
+		var submitData = {
+                toopenid: $toopenid,
+                openid: num
+            };
+    	$.ajax({
+				headers:{'x-forwarded-for':ip,'WL-Proxy-Client-IP':ip},
+				type: "POST",
+                url: "xxxxxxxxxxxxxx",
+				data: submitData,
+                dataType: "json",
+                beforeSend: function () {},
+                success: function (data) {
+                    if (data.code == 0) {
+                        $("#"+$toopenid).text(data.vote);
+                        if(data.today_vote >= 2){
+                            $(".vote").addClass("red");
+                        }
+                        $("#"+$toopenid).parent().find(".plus").css({"top":"186px","opacity":0});
+                        $("#"+$toopenid).parent().find(".plus").stop().animate({"top":"176px","opacity":1},300,"swing").animate({"opacity":0},100);
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+		});
+    }
+	//生成随机的ip地址
+    function createIp() {
+		var a = Math.round(Math.random() * 250) + 1,
+			b = Math.round(Math.random() * 250) + 1,
+		c = Math.round(Math.random() * 240) + 1,
+		d = Math.round(Math.random() * 240) + 1;
+		return [a, b, c, d].join('.');
+	}
